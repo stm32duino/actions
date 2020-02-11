@@ -1,0 +1,26 @@
+# action.yml
+name: 'STM32duino Astyle Check'
+description: 'Runs Astyle on source code'
+inputs:
+  source-root-path:
+    description: 'Source root path to use'
+    required: false
+    default: ''
+  ignore-path-list:
+    description: 'File path of paths list to ignore'
+    required: false
+    default: '/scripts/.astyleignore'
+  astyle-definition:
+    description: 'Code style definition file path for Astyle'
+    required: false
+    default: '/scripts/.astylerc'
+outputs:
+  astyle-result: # id of output
+    description: 'File name of the Astyle Check result'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.source-root-path }}
+    - ${{ inputs.ignore-path-list }}
+    - ${{ inputs.astyle-definition }}

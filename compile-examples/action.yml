@@ -1,0 +1,24 @@
+# action.yml
+name: 'STM32duino Compile example(s)'
+description: 'Compiles examples with STM32 core'
+inputs:
+  board-pattern:
+    description: 'Pattern to build one or more board(s)'
+    default: '' 
+  cli-version:
+    description: 'Version of arduino-cli to use when building'
+    default: 'latest'
+  libraries:
+    description: 'List of library dependencies to install (comma separated)'
+    default: ''
+outputs:
+  compile-result: # id of output
+    description: 'File name of the compile result'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.board-pattern }}
+    - ${{ inputs.cli-version }}
+    - ${{ inputs.libraries }}
+

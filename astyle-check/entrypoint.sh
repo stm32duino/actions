@@ -15,11 +15,11 @@ python3 /scripts/astyle.py -r "$ROOT_SRC_PATH" -i "$IGNORE_LIST_PATH" -d "$ASTYL
   exit 1
 }
 
-RES=$([[ -f "astyle.out" ]] && grep -c "Formatted" < "astyle.out")
+RES=$([[ -f "astyle.out" ]] && grep --count "Formatted" < "astyle.out")
 if [[ $RES -ne 0 ]]; then
   echo -e "AStyle check \e[31;1mfailed\e[0m, please fix style issues as shown below:" > "$OUTPUT_FILE"
-  grep "Formatted" < "astyle.out" | tee -a "$OUTPUT_FILE"
-  git --no-pager diff --color | tee -a "$OUTPUT_FILE"
+  grep "Formatted" < "astyle.out" | tee --append "$OUTPUT_FILE"
+  git --no-pager diff --color | tee --append "$OUTPUT_FILE"
   echo -e "AStyle check \e[31;1mfailed\e[0m, please fix style issues as shown above!"
   exit 1
 else

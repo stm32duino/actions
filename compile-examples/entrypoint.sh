@@ -16,12 +16,12 @@ readonly CLI_ARCHIVE="arduino-cli_${CLI_VERSION}_Linux_64bit.tar.gz"
 # Additional Boards Manager URL
 readonly ADDITIONAL_URL="https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json"
 # Download the arduino-cli
-wget --no-verbose -P "$HOME" "https://downloads.arduino.cc/arduino-cli/$CLI_ARCHIVE" || {
+wget --no-verbose --directory-prefix="$HOME" "https://downloads.arduino.cc/arduino-cli/$CLI_ARCHIVE" || {
   exit 1
 }
 # Extract the arduino-cli to $HOME/bin
 mkdir "$HOME/bin"
-tar xf "$HOME/$CLI_ARCHIVE" -C "$HOME/bin" || {
+tar --extract --file="$HOME/$CLI_ARCHIVE" --directory="$HOME/bin" || {
   exit 1
 }
 
@@ -44,7 +44,7 @@ else
   IFS=',' read -ra LIB_NAME <<< "$LIBRARIES"
   for i in "${LIB_NAME[@]}"; do
     # Ensure no leading/trailing spaces
-    iws=$(echo "$i" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]$//')
+    iws=$(echo "$i" | sed --expression='s/^[[:space:]]*//' --expression='s/[[:space:]]$//')
     arduino-cli lib install "$iws" || {
       exit 1
     }
@@ -52,8 +52,8 @@ else
 fi
 
 # Symlink the library that needs to be built in the sketchbook
-mkdir -p "$LIBRARIES_PATH"
-ln -s "$GITHUB_WORKSPACE" "$LIBRARIES_PATH/." || {
+mkdir --parents "$LIBRARIES_PATH"
+ln --symbolic "$GITHUB_WORKSPACE" "$LIBRARIES_PATH/." || {
   exit 1
 }
 
@@ -64,8 +64,8 @@ SCRIPT_PATH="$CORE_VERSION_PATH/CI/build"
 # Is it the STM32 core to build ?
 if [ -d "$GITHUB_WORKSPACE/cores" ] && [ -d "$GITHUB_WORKSPACE/variants" ]; then
   # Symlink core
-  rm -r "${CORE_PATH:?}/"*
-  ln -s "$GITHUB_WORKSPACE" "$CORE_VERSION_PATH" || {
+  rm --recursive "${CORE_PATH:?}/"*
+  ln --symbolic "$GITHUB_WORKSPACE" "$CORE_VERSION_PATH" || {
     exit 1
   }
   find "$SCRIPT_PATH/examples" -name '*.ino' -print0 | xargs dirname | uniq > "$EXAMPLES_FILE"

@@ -2,7 +2,7 @@
 FROM ubuntu:latest
 
 # Install prerequisites
-RUN apt-get update --quiet=2 && apt-get install --quiet=2 -y astyle python3 git
+RUN apt-get update --quiet=2 && apt-get install --quiet=2 --assume-yes astyle python3 git
 CMD /bin/bash
 
 # Copies your code file from your action repository to the filesystem path `/` of the container

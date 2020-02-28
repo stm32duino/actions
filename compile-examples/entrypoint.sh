@@ -41,7 +41,7 @@ arduino-cli core install STM32:stm32 --additional-urls "$ADDITIONAL_URL" || {
 if [ -z "$LIBRARIES" ]; then
   echo "No libraries to install"
 else
-  IFS=',' read -ra LIB_NAME <<< "$LIBRARIES"
+  IFS=',' read -ra LIB_NAME <<<"$LIBRARIES"
   for i in "${LIB_NAME[@]}"; do
     # Ensure no leading/trailing spaces
     iws=$(echo "$i" | sed --expression='s/^[[:space:]]*//' --expression='s/[[:space:]]$//')
@@ -68,11 +68,11 @@ if [ -d "$GITHUB_WORKSPACE/cores" ] && [ -d "$GITHUB_WORKSPACE/variants" ]; then
   ln --symbolic "$GITHUB_WORKSPACE" "$CORE_VERSION_PATH" || {
     exit 1
   }
-  find "$SCRIPT_PATH/examples" -name '*.ino' -print0 | xargs dirname | uniq > "$EXAMPLES_FILE"
+  find "$SCRIPT_PATH/examples" -name '*.ino' -print0 | xargs dirname | uniq >"$EXAMPLES_FILE"
 else
   # Create file of all examples to build
   if [ -d "examples" ]; then
-    find "examples" -name '*.ino' -print0 | xargs dirname | uniq > "$EXAMPLES_FILE"
+    find "examples" -name '*.ino' -print0 | xargs dirname | uniq >"$EXAMPLES_FILE"
   else
     touch "$EXAMPLES_FILE"
   fi

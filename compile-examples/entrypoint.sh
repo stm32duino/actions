@@ -1,20 +1,20 @@
 #!/bin/bash
 
-BOARDS_PATTERN="$1"
-CLI_VERSION="$2"
-LIBRARIES="$3"
+readonly BOARDS_PATTERN="$1"
+readonly CLI_VERSION="$2"
+readonly LIBRARIES="$3"
 
-CORE_PATH="$HOME/.arduino15/packages/STM32/hardware/stm32"
-LIBRARIES_PATH="$HOME/Arduino/libraries"
-EXAMPLES_FILE="examples.txt"
-OUTPUT_FILE="compile-result.txt"
+readonly CORE_PATH="$HOME/.arduino15/packages/STM32/hardware/stm32"
+readonly LIBRARIES_PATH="$HOME/Arduino/libraries"
+readonly EXAMPLES_FILE="examples.txt"
+readonly OUTPUT_FILE="compile-result.txt"
 echo ::set-output name=compile-result::$OUTPUT_FILE
 
 # Determine cli archive
-CLI_ARCHIVE="arduino-cli_${CLI_VERSION}_Linux_64bit.tar.gz"
+readonly CLI_ARCHIVE="arduino-cli_${CLI_VERSION}_Linux_64bit.tar.gz"
 
 # Additional Boards Manager URL
-ADDITIONAL_URL="https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json"
+readonly ADDITIONAL_URL="https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json"
 # Download the arduino-cli
 wget --no-verbose -P "$HOME" "https://downloads.arduino.cc/arduino-cli/$CLI_ARCHIVE" || {
   exit 1
@@ -57,8 +57,8 @@ ln -s "$GITHUB_WORKSPACE" "$LIBRARIES_PATH/." || {
   exit 1
 }
 
-CORE_VERSION=$(eval ls "$CORE_PATH")
-CORE_VERSION_PATH="$CORE_PATH/$CORE_VERSION"
+readonly CORE_VERSION=$(eval ls "$CORE_PATH")
+readonly CORE_VERSION_PATH="$CORE_PATH/$CORE_VERSION"
 SCRIPT_PATH="$CORE_VERSION_PATH/CI/build"
 
 # Is it the STM32 core to build ?

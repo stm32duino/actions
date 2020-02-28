@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ROOT_SRC_PATH="$1"
-IGNORE_LIST_PATH="$2"
-ASTYLE_DEFINITION_PATH="$3"
+readonly IGNORE_LIST_PATH="$2"
+readonly ASTYLE_DEFINITION_PATH="$3"
 
-OUTPUT_FILE="astyle-result.txt"
+readonly OUTPUT_FILE="astyle-result.txt"
 echo ::set-output name=astyle-result::$OUTPUT_FILE
 
 if [ -z "$1" ]; then

@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 ROOT_SRC_PATH=$1
 IGNORE_LIST_PATH=$2

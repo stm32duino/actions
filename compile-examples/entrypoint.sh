@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 BOARDS_PATTERN=$1
 CLI_VERSION=$2
@@ -17,7 +17,7 @@ CLI_ARCHIVE=arduino-cli_${CLI_VERSION}_Linux_64bit.tar.gz
 ADDITIONAL_URL="https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json"
 
 # Download the arduino-cli
-wget -P $HOME https://downloads.arduino.cc/arduino-cli/$CLI_ARCHIVE
+wget --no-verbose -P $HOME https://downloads.arduino.cc/arduino-cli/$CLI_ARCHIVE
 
 # Extract the arduino-cli to $HOME/bin
 mkdir $HOME/bin

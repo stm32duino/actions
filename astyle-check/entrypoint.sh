@@ -11,7 +11,9 @@ if [ -z "$1" ]; then
   ROOT_SRC_PATH="."
 fi
 
-python3 /scripts/astyle.py -r "$ROOT_SRC_PATH" -i "$IGNORE_LIST_PATH" -d "$ASTYLE_DEFINITION_PATH"
+python3 /scripts/astyle.py -r "$ROOT_SRC_PATH" -i "$IGNORE_LIST_PATH" -d "$ASTYLE_DEFINITION_PATH" || {
+  exit 1
+}
 
 RES=$([[ -f "astyle.out" ]] && grep -c "Formatted" < "astyle.out")
 if [[ $RES -ne 0 ]]; then

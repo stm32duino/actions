@@ -6,7 +6,7 @@ Runs Astyle on source code.
 
 ### `astyle-definition`
 
-The sode style definition file path for Astyle. Default `"/scripts/.astylerc"`.
+The code style definition file path for Astyle. Default `"/scripts/.astylerc"`.
 
 ### `ignore-path-list`
 

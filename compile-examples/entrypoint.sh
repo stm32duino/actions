@@ -78,11 +78,10 @@ else
   fi
 fi
 
-# arduino-cli.py will be available on core version 1.9.0
-# Fallback to the embedded one if not exists
 # Check if arduino-cli.py available
 if [ ! -f "$SCRIPT_PATH/arduino-cli.py" ]; then
-  SCRIPT_PATH="/scripts"
+  echo -e "\e[31;1marduino-cli.py could not be found!\e[0m"
+  exit 1
 fi
 
 # Build all examples

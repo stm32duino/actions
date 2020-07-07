@@ -16,6 +16,10 @@ The version of arduino-cli to use. Default `"0.10.0"`.
 
 List of library dependencies to install (comma separated). Default `""`.
 
+### `additional-url`
+
+Additional URL for the board manager. Default `"https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json"`.
+
 ## Outputs
 
 ### `compile-result`
@@ -28,7 +32,9 @@ File name of the Compile result.
 uses: stm32duino/actions/compile-examples@master
 with:
   board-pattern: 'NUCLEO_F103RB|NUCLEO_H743ZI'
-  cli-version: '8.0'
+  cli-version: '0.11.0'
+  libraries: 'STM32duino LSM6DS0, STM32duino LSM6DS3, STM32duino LIS3MDL, STM32duino HTS221, STM32duino LPS25HB'
+  additional-url: 'https://github.com/stm32duino/BoardManagerFiles/raw/dev/STM32/package_stm_index.json'
 ```
 
 #### Output the result on failure

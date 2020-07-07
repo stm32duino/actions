@@ -11,6 +11,9 @@ inputs:
   libraries:
     description: 'List of library dependencies to install (comma separated)'
     default: ''
+  additional-url:
+    description: 'Additional URL for the board manager'
+    default: 'https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json'
 outputs:
   compile-result: # id of output
     description: 'File name of the compile result'
@@ -21,4 +24,5 @@ runs:
     - ${{ inputs.board-pattern }}
     - ${{ inputs.cli-version }}
     - ${{ inputs.libraries }}
+    - ${{ inputs.additional-url }}
 

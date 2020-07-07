@@ -3,6 +3,7 @@
 readonly BOARDS_PATTERN="$1"
 readonly CLI_VERSION="$2"
 readonly LIBRARIES="$3"
+readonly ADDITIONAL_URL="$4"
 
 readonly CORE_PATH="$HOME/.arduino15/packages/STM32/hardware/stm32"
 readonly LIBRARIES_PATH="$HOME/Arduino/libraries"
@@ -13,8 +14,8 @@ echo ::set-output name=compile-result::$OUTPUT_FILE
 # Determine cli archive
 readonly CLI_ARCHIVE="arduino-cli_${CLI_VERSION}_Linux_64bit.tar.gz"
 
-# Additional Boards Manager URL
-readonly ADDITIONAL_URL="https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json"
+options=(--ci -f "$EXAMPLES_FILE")
+
 # Download the arduino-cli
 wget --no-verbose --directory-prefix="$HOME" "https://downloads.arduino.cc/arduino-cli/$CLI_ARCHIVE" || {
   exit 1
@@ -84,11 +85,16 @@ if [ ! -f "$SCRIPT_PATH/arduino-cli.py" ]; then
   exit 1
 fi
 
-# Build all examples
-if [ -z "$BOARDS_PATTERN" ]; then
-  python3 "$SCRIPT_PATH/arduino-cli.py" --ci -f "$EXAMPLES_FILE" | tee "$OUTPUT_FILE"
-else
-  python3 "$SCRIPT_PATH/arduino-cli.py" --ci -f "$EXAMPLES_FILE" -b "$BOARDS_PATTERN" | tee "$OUTPUT_FILE"
+# Check if arduino-cli.py manages url argument
+if grep "args.url" "$SCRIPT_PATH/arduino-cli.py" >/dev/null 2>&1; then
+  options+=(--url "$ADDITIONAL_URL")
 fi
+
+if [ -n "$BOARDS_PATTERN" ]; then
+  options+=(-b "$BOARDS_PATTERN")
+fi
+
+# Build all examples
+python3 "$SCRIPT_PATH/arduino-cli.py" "${options[@]}" | tee "$OUTPUT_FILE"
 
 exit "${PIPESTATUS[0]}"

@@ -20,6 +20,10 @@ List of library dependencies to install (comma separated). Default `""`.
 
 Additional URL for the board manager. Default `"https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json"`.
 
+### `example-pattern`
+
+Pattern to build one or more example(s). Default `""` to build all examples found.
+
 ## Outputs
 
 ### `compile-result`
@@ -35,6 +39,7 @@ with:
   cli-version: '0.11.0'
   libraries: 'STM32duino LSM6DS0, STM32duino LSM6DS3, STM32duino LIS3MDL, STM32duino HTS221, STM32duino LPS25HB'
   additional-url: 'https://github.com/stm32duino/BoardManagerFiles/raw/dev/STM32/package_stm_index.json'
+  example-pattern: '[Blink|Analog]'
 ```
 
 #### Output the result on failure

@@ -4,6 +4,7 @@ readonly BOARDS_PATTERN="$1"
 readonly CLI_VERSION="$2"
 readonly LIBRARIES="$3"
 readonly ADDITIONAL_URL="$4"
+readonly EXAMPLE_PATTERN="$5"
 
 readonly CORE_PATH="$HOME/.arduino15/packages/STM32/hardware/stm32"
 readonly LIBRARIES_PATH="$HOME/Arduino/libraries"
@@ -61,6 +62,7 @@ ln --symbolic "$GITHUB_WORKSPACE" "$LIBRARIES_PATH/." || {
 readonly CORE_VERSION=$(eval ls "$CORE_PATH")
 readonly CORE_VERSION_PATH="$CORE_PATH/$CORE_VERSION"
 SCRIPT_PATH="$CORE_VERSION_PATH/CI/build"
+EXAMPLES_PATH="examples"
 
 # Is it the STM32 core to build ?
 if [ -d "$GITHUB_WORKSPACE/cores" ] && [ -d "$GITHUB_WORKSPACE/variants" ]; then
@@ -69,14 +71,19 @@ if [ -d "$GITHUB_WORKSPACE/cores" ] && [ -d "$GITHUB_WORKSPACE/variants" ]; then
   ln --symbolic "$GITHUB_WORKSPACE" "$CORE_VERSION_PATH" || {
     exit 1
   }
-  find "$SCRIPT_PATH/examples" -name '*.ino' -exec dirname {} + | uniq >"$EXAMPLES_FILE"
+  EXAMPLES_PATH="$SCRIPT_PATH/examples"
 else
-  # Create file of all examples to build
-  if [ -d "examples" ]; then
-    find "examples" -name '*.ino' -exec dirname {} + | uniq >"$EXAMPLES_FILE"
-  else
-    touch "$EXAMPLES_FILE"
+  if [ ! -d "examples" ]; then
+    echo -e "\e[31;1mNo example to compile!\e[0m"
+    exit 1
   fi
+fi
+
+# Create file of all examples to build
+find "$EXAMPLES_PATH" -name '*.ino' -exec dirname {} + | uniq >"$EXAMPLES_FILE.bak"
+if ! grep -e "$EXAMPLE_PATTERN" "$EXAMPLES_FILE.bak" >"$EXAMPLES_FILE" 2>&1; then
+  echo -e "\e[31;1mFailed to find example!\e[0m"
+  exit 1
 fi
 
 # Check if arduino-cli.py available

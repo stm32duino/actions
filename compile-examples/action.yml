@@ -14,6 +14,9 @@ inputs:
   additional-url:
     description: 'Additional URL for the board manager'
     default: 'https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json'
+  example-pattern:
+    description: 'Pattern to build one or more example(s)'
+    default: ''
 outputs:
   compile-result: # id of output
     description: 'File name of the compile result'
@@ -25,4 +28,5 @@ runs:
     - ${{ inputs.cli-version }}
     - ${{ inputs.libraries }}
     - ${{ inputs.additional-url }}
+    - ${{ inputs.example-pattern }}
 

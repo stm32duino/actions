@@ -36,7 +36,7 @@ File name of the Compile result.
 uses: stm32duino/actions/compile-examples@master
 with:
   board-pattern: 'NUCLEO_F103RB|NUCLEO_H743ZI'
-  cli-version: '0.11.0'
+  cli-version: '0.18.0'
   libraries: 'STM32duino LSM6DS0, STM32duino LSM6DS3, STM32duino LIS3MDL, STM32duino HTS221, STM32duino LPS25HB'
   additional-url: 'https://github.com/stm32duino/BoardManagerFiles/raw/dev/STM32/package_stm_index.json'
   example-pattern: '[Blink|Analog]'

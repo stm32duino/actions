@@ -10,7 +10,7 @@ Pattern to build one or more board(s). Default `""` to build all boards defined 
 
 ### `cli-version`
 
-The version of arduino-cli to use. Default `"0.17.0"`.
+The version of arduino-cli to use. Default `"0.18.0"`.
 
 ### `libraries`
 
@@ -18,7 +18,7 @@ List of library dependencies to install (comma separated). Default `""`.
 
 ### `additional-url`
 
-Additional URL for the board manager. Default `"https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json"`.
+Additional URL for the board manager. Default `"https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json"`.
 
 ### `example-pattern`
 

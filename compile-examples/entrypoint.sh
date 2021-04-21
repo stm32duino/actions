@@ -6,7 +6,7 @@ readonly LIBRARIES="$3"
 readonly ADDITIONAL_URL="$4"
 readonly EXAMPLE_PATTERN="$5"
 
-readonly CORE_PATH="$HOME/.arduino15/packages/STM32/hardware/stm32"
+readonly CORE_PATH="$HOME/.arduino15/packages/STMicroelectronics/hardware/stm32"
 readonly LIBRARIES_PATH="$HOME/Arduino/libraries"
 readonly EXAMPLES_FILE="examples.txt"
 readonly OUTPUT_FILE="compile-result.txt"
@@ -35,7 +35,7 @@ export PATH=$PATH:$HOME/bin
 
 # Update the code index and install the required CORE
 arduino-cli core update-index --additional-urls "$ADDITIONAL_URL"
-arduino-cli core install STM32:stm32 --additional-urls "$ADDITIONAL_URL" || {
+arduino-cli core install STMicroelectronics:stm32 --additional-urls "$ADDITIONAL_URL" || {
   exit 1
 }
 

@@ -1,6 +1,6 @@
 # STM32duino core build action
 
-Builds examples witk the STM32dion core.
+Builds examples witk the STM32duino core.
 
 ## Inputs
 

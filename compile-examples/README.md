@@ -1,6 +1,6 @@
 # STM32duino core build action
 
-Builds examples witk the STM32duino core.
+Builds examples with the STM32duino core.
 
 ## Inputs
 
@@ -10,7 +10,7 @@ Pattern to build one or more board(s). Default `""` to build all boards defined 
 
 ### `cli-version`
 
-The version of arduino-cli to use. Default `"0.18.0"`.
+The version of arduino-cli to use. Default `"0.19.3"`.
 
 ### `libraries`
 

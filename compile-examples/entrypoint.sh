@@ -34,8 +34,9 @@ tar --extract --file="$HOME/$CLI_ARCHIVE" --directory="$HOME/bin" || {
 export PATH=$PATH:$HOME/bin
 
 # Update the code index and install the required CORE
-arduino-cli core update-index --additional-urls "$ADDITIONAL_URL"
-arduino-cli core install STMicroelectronics:stm32 --additional-urls "$ADDITIONAL_URL" || {
+arduino-cli config init --additional-urls "$ADDITIONAL_URL"
+arduino-cli core update-index
+arduino-cli core install STMicroelectronics:stm32 || {
   exit 1
 }
 

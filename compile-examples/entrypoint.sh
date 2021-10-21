@@ -59,7 +59,7 @@ ln --symbolic "$GITHUB_WORKSPACE" "$LIBRARIES_PATH/." || {
   exit 1
 }
 
-readonly CORE_VERSION=$(eval ls "$CORE_PATH")
+CORE_VERSION=$(eval ls "$CORE_PATH")
 readonly CORE_VERSION_PATH="$CORE_PATH/$CORE_VERSION"
 SCRIPT_PATH="$CORE_VERSION_PATH/CI/build"
 EXAMPLES_PATH="examples"

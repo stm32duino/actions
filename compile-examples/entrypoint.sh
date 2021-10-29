@@ -74,9 +74,10 @@ if [ -d "$GITHUB_WORKSPACE/cores" ] && [ -d "$GITHUB_WORKSPACE/variants" ]; then
   }
   EXAMPLES_PATH="$SCRIPT_PATH/examples"
 else
-  if [ ! -d "examples" ]; then
-    echo -e "\e[31;1mNo example to compile!\e[0m"
-    exit 1
+  if [ ! -d "$EXAMPLES_PATH" ]; then
+    echo -e "\e[33;1mNo example to compile for this repository!\e[0m"
+    echo -e "\e[33;1mFallback to Arduino libraries folder...\e[0m"
+    EXAMPLES_PATH="$LIBRARIES_PATH"
   fi
 fi
 

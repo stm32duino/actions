@@ -13,7 +13,7 @@ inputs:
     default: ''
   additional-url:
     description: 'Additional URL for the board manager'
-    default: 'https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json'
+    default: 'https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json'
   example-pattern:
     description: 'Pattern to build one or more example(s)'
     default: ''

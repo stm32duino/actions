@@ -18,7 +18,7 @@ List of library dependencies to install (comma separated). Default `""`.
 
 ### `additional-url`
 
-Additional URL for the board manager. Default `"https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json"`.
+Additional URL for the board manager. Default `"https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json"`.
 
 ### `example-pattern`
 

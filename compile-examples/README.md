@@ -24,6 +24,10 @@ Additional URL for the board manager. Default `"https://github.com/stm32duino/Bo
 
 Pattern to build one or more example(s). Default `""` to build all examples found.
 
+### `custom-config`
+
+JSON file containing the build configuration. Default `""` to use default configuration.
+
 ## Outputs
 
 ### `compile-result`
@@ -33,7 +37,7 @@ File name of the Compile result.
 ## Example usage
 
 ```yaml
-uses: stm32duino/actions/compile-examples@master
+uses: stm32duino/actions/compile-examples@main
 with:
   board-pattern: 'NUCLEO_F103RB|NUCLEO_H743ZI'
   cli-version: '0.18.0'

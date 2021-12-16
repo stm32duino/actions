@@ -5,6 +5,7 @@ readonly CLI_VERSION="$2"
 readonly LIBRARIES="$3"
 readonly ADDITIONAL_URL="$4"
 readonly EXAMPLE_PATTERN="$5"
+readonly CUSTOM_CONFIG="$6"
 
 readonly CORE_PATH="$HOME/.arduino15/packages/STMicroelectronics/hardware/stm32"
 readonly LIBRARIES_PATH="$HOME/Arduino/libraries"
@@ -101,6 +102,15 @@ fi
 
 if [ -n "$BOARDS_PATTERN" ]; then
   options+=(-b "$BOARDS_PATTERN")
+fi
+
+if [ -n "$CUSTOM_CONFIG" ]; then
+  if [ ! -f "$CUSTOM_CONFIG" ]; then
+    echo -e "\e[33;1m${CUSTOM_CONFIG} could not be found!\e[0m"
+    echo -e "\e[33;1mFallback to default configuratuion...\e[0m"
+  else
+    options+=(--config "$CUSTOM_CONFIG")
+  fi
 fi
 
 # Build all examples

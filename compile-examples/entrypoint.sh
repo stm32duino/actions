@@ -75,6 +75,8 @@ if [ -d "$GITHUB_WORKSPACE/cores" ] && [ -d "$GITHUB_WORKSPACE/variants" ]; then
   }
   EXAMPLES_PATH="$SCRIPT_PATH/examples"
 else
+  # Ensure to have the latest script version
+  wget --no-verbose -O "$SCRIPT_PATH/arduino-cli.py" https://github.com/stm32duino/Arduino_Core_STM32/raw/main/CI/build/arduino-cli.py
   if [ ! -d "$EXAMPLES_PATH" ]; then
     echo -e "\e[33;1mNo example to compile for this repository!\e[0m"
     echo -e "\e[33;1mFallback to Arduino libraries folder...\e[0m"

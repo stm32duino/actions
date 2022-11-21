@@ -25,7 +25,7 @@ The file name of the Astyle Check result.
 ## Example usage
 
 ```yaml
-uses: stm32duino/actions/astyle-check@master
+uses: stm32duino/actions/astyle-check@main
 with:
   astyle-definition: 'CI/astyle/.astylerc'
   ignore-path-list: 'CI/astyle/.astyleignore'
@@ -37,7 +37,7 @@ with:
 ```yaml
 - name: Astyle check
   id: Astyle
-  uses: stm32duino/actions/astyle-check@master
+  uses: stm32duino/actions/astyle-check@main
   # Use the output from the `Astyle` step
 - name: Astyle Errors
   if: failure()

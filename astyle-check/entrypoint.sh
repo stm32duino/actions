@@ -11,7 +11,20 @@ if [ -z "$1" ]; then
   ROOT_SRC_PATH="."
 fi
 
-python3 /scripts/astyle.py -r "$ROOT_SRC_PATH" -i "$IGNORE_LIST_PATH" -d "$ASTYLE_DEFINITION_PATH" || {
+SCRIPT_PATH="./"
+
+# Is it the STM32 core to check?
+if [ -d "$GITHUB_WORKSPACE/cores" ] && [ -d "$GITHUB_WORKSPACE/variants" ]; then
+  # script available locally
+  SCRIPT_PATH="$GITHUB_WORKSPACE/CI/astyle"
+else
+  # Ensure to have the latest script version and linked files
+  wget --no-verbose https://github.com/stm32duino/Arduino_Core_STM32/raw/main/CI/astyle/astyle.py
+  wget --no-verbose https://github.com/stm32duino/Arduino_Core_STM32/raw/main/CI/astyle/.astyleignore
+  wget --no-verbose https://github.com/stm32duino/Arduino_Core_STM32/raw/main/CI/astyle/.astylerc
+fi
+
+python3 "$SCRIPT_PATH"/astyle.py -r "$ROOT_SRC_PATH" -i "$IGNORE_LIST_PATH" -d "$ASTYLE_DEFINITION_PATH" || {
   exit 1
 }
 

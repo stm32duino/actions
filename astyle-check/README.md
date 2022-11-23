@@ -6,11 +6,11 @@ Runs Astyle on source code.
 
 ### `astyle-definition`
 
-The code style definition file path for Astyle. Default `"/scripts/.astylerc"`.
+The code style definition file path for Astyle. Default `".astylerc"` from [stm32duino/Arduino_Core_STM32@main](https://github.com/stm32duino/Arduino_Core_STM32/blob/main/CI/astyle/.astylerc).
 
 ### `ignore-path-list`
 
-The file path of paths list to ignore. Default `"/scripts/.astyleignore"`.
+The file path of paths list to ignore. Default `".astyleignore"` from [stm32duino/Arduino_Core_STM32@main](https://github.com/stm32duino/Arduino_Core_STM32/blob/main/CI/astyle/.astyleignore).
 
 ### `source-root-path`
 

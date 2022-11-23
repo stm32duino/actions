@@ -9,11 +9,11 @@ inputs:
   ignore-path-list:
     description: 'File path of paths list to ignore'
     required: false
-    default: '/scripts/.astyleignore'
+    default: '.astyleignore'
   astyle-definition:
     description: 'Code style definition file path for Astyle'
     required: false
-    default: '/scripts/.astylerc'
+    default: '.astylerc'
 outputs:
   astyle-result: # id of output
     description: 'File name of the Astyle Check result'

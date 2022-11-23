@@ -5,7 +5,7 @@ readonly IGNORE_LIST_PATH="$2"
 readonly ASTYLE_DEFINITION_PATH="$3"
 
 readonly OUTPUT_FILE="astyle-result.txt"
-echo ::set-output name=astyle-result::$OUTPUT_FILE
+echo "astyle-result=$OUTPUT_FILE" >>"$GITHUB_OUTPUT"
 
 if [ -z "$1" ]; then
   ROOT_SRC_PATH="."

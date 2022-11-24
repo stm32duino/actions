@@ -11,7 +11,7 @@ readonly CORE_PATH="$HOME/.arduino15/packages/STMicroelectronics/hardware/stm32"
 readonly LIBRARIES_PATH="$HOME/Arduino/libraries"
 readonly EXAMPLES_FILE="examples.txt"
 readonly OUTPUT_FILE="compile-result.txt"
-echo ::set-output name=compile-result::$OUTPUT_FILE
+echo "compile-result=$OUTPUT_FILE" >>"$GITHUB_OUTPUT"
 
 # Determine cli archive
 readonly CLI_ARCHIVE="arduino-cli_${CLI_VERSION}_Linux_64bit.tar.gz"

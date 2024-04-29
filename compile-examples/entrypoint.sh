@@ -13,6 +13,11 @@ readonly EXAMPLES_FILE="examples.txt"
 readonly OUTPUT_FILE="compile-result.txt"
 echo "compile-result=$OUTPUT_FILE" >>"$GITHUB_OUTPUT"
 
+# Use python venv
+python3 -m venv "$HOME/venv"
+source "$HOME/venv/bin/activate"
+python3 -m pip install --quiet --upgrade packaging
+
 # Determine cli archive
 readonly CLI_ARCHIVE="arduino-cli_${CLI_VERSION}_Linux_64bit.tar.gz"
 

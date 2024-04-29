@@ -2,9 +2,7 @@
 FROM ubuntu:latest
 
 # Install prerequisites
-RUN apt-get update --quiet=2 && apt-get install --quiet=2 --assume-yes python3 python3-pip wget
-
-RUN pip3 install --quiet --upgrade packaging
+RUN apt-get update --quiet=2 && apt-get install --quiet=2 --assume-yes python3 python3-pip python3-venv wget
 
 CMD /bin/bash
 

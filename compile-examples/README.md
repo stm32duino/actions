@@ -10,7 +10,7 @@ Pattern to build one or more board(s). Default `""` to build all boards defined 
 
 ### `cli-version`
 
-The version of arduino-cli to use. Default `"1.4.0"`.
+The version of arduino-cli to use. Default `"1.5.0"`.
 
 ### `libraries`
 

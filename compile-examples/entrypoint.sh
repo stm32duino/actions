@@ -56,7 +56,7 @@ if [ "$USE_CORE_REPO" = "true" ]; then
   # additional-url: 'https://github.com/stm32duino/BoardManagerFiles/raw/dev/package_stmicroelectronics_index.json'
   rm -rf "$CORE_VERSION_PATH"
   # Clone the repository and copy the core files to the core path
-  git clone https://github.com/stm32duino/Arduino_Core_STM32.git "$CORE_VERSION_PATH" --recurse-submodules --depth 1 || {
+  gh repo clone stm32duino/Arduino_Core_STM32 "$CORE_VERSION_PATH" -- --recurse-submodules --depth 1 || {
     exit 1
   }
 fi

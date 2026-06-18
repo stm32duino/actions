@@ -38,6 +38,37 @@ from the repository after the board manager is installed. Default `false`.
 
 File name of the Compile result.
 
+## Dynamic Core PR Selection via Comments
+
+> [!Note]
+> Available with compile-examples@v2
+
+In addition to the `use-core-repo` input, you can dynamically select a specific Arduino_Core_STM32 PR
+to test against by adding a `/use-core-pr` keyword in a PR comment.
+
+### Usage
+
+Add a comment in the PR with the `/use-core-pr` keyword followed by a PR number:
+
+```
+/use-core-pr #123
+```
+
+or
+
+```
+/use-core-pr 123
+```
+
+When the action runs, it will:
+1. Detect the `/use-core-pr` keyword in the PR comments
+2. Clone the Arduino_Core_STM32 repository
+3. Checkout the specified PR
+4. Use that version instead of the released core package
+
+> [!Note]
+> The last occurrence of the `/use-core-pr` keyword in the PR body takes precedence if multiple are present.
+
 ## Example usage
 
 ```yaml

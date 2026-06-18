@@ -48,18 +48,61 @@ arduino-cli core install STMicroelectronics:stm32 || {
 }
 CORE_VERSION=$(eval ls "$CORE_PATH")
 readonly CORE_VERSION_PATH="$CORE_PATH/$CORE_VERSION"
-if [ "$USE_CORE_REPO" = "true" ]; then
-  # Remove the existing core and replace it with the main branch from the repository
+
+# Scan PR comments for the keyword: /use-core-pr <number>
+# The last occurrence wins (most recent comment takes precedence)
+CORE_PR_NUMBER=""
+if [ -n "$GITHUB_TOKEN" ] && [ -n "$GITHUB_REPOSITORY" ] && [ -f "${GITHUB_EVENT_PATH:-}" ]; then
+  PR_NUMBER=$(python3 -c "
+import json, sys
+try:
+    d = json.load(open('$GITHUB_EVENT_PATH'))
+    print(d.get('pull_request', d.get('issue', {})).get('number', ''))
+except Exception:
+    pass
+" 2>/dev/null)
+  if [ -n "$PR_NUMBER" ]; then
+    echo "Scanning PR #$PR_NUMBER body for /use-core-pr keyword..."
+    CORE_PR_NUMBER=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq '.body // ""' 2>/dev/null | python3 -c "
+import sys, re
+matches = re.findall(r'(?i)/use-core-pr\s+#?(\d+)', sys.stdin.read())
+if matches:
+    print(matches[-1])
+" 2>/dev/null || true)
+    if [ -n "$CORE_PR_NUMBER" ]; then
+      echo "Found core PR reference: #$CORE_PR_NUMBER"
+    fi
+  fi
+fi
+
+if [ -n "$CORE_PR_NUMBER" ] || [ "$USE_CORE_REPO" = "true" ]; then
+  # Remove the existing core and replace it with the repository version
   # Important note: using latest version from the repository may introduce some new dependencies.
   # It is advised to set the additional URL to the dev branch of the board manager file to ensure
   # compatibility with the main branch of the core:
   # additional-url: 'https://github.com/stm32duino/BoardManagerFiles/raw/dev/package_stmicroelectronics_index.json'
   rm -rf "$CORE_VERSION_PATH"
-  # Clone the repository and copy the core files to the core path
-  gh repo clone stm32duino/Arduino_Core_STM32 "$CORE_VERSION_PATH" -- --recurse-submodules --depth 1 || {
-    exit 1
-  }
+  if [ -n "$CORE_PR_NUMBER" ]; then
+    # Clone without --depth 1 to allow gh pr checkout to fetch the PR ref
+    gh repo clone stm32duino/Arduino_Core_STM32 "$CORE_VERSION_PATH" -- --recurse-submodules || {
+      exit 1
+    }
+    echo "Checking out core PR #$CORE_PR_NUMBER..."
+    (cd "$CORE_VERSION_PATH" && gh pr checkout "$CORE_PR_NUMBER") || {
+      exit 1
+    }
+    (cd "$CORE_VERSION_PATH" && git submodule update --init --recursive) || {
+      exit 1
+    }
+  else
+    # Clone the main branch
+    gh repo clone stm32duino/Arduino_Core_STM32 "$CORE_VERSION_PATH" -- --recurse-submodules --depth 1 || {
+      exit 1
+    }
+  fi
 fi
+
+
 # Install libraries if needed
 if [ -z "$LIBRARIES" ]; then
   echo "No libraries to install"

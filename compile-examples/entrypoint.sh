@@ -6,6 +6,7 @@ readonly LIBRARIES="$3"
 readonly ADDITIONAL_URL="$4"
 readonly EXAMPLE_PATTERN="$5"
 readonly CUSTOM_CONFIG="$6"
+readonly USE_CORE_REPO="$7"
 
 readonly CORE_PATH="$HOME/.arduino15/packages/STMicroelectronics/hardware/stm32"
 readonly LIBRARIES_PATH="$HOME/Arduino/libraries"
@@ -45,7 +46,20 @@ arduino-cli core update-index
 arduino-cli core install STMicroelectronics:stm32 || {
   exit 1
 }
-
+CORE_VERSION=$(eval ls "$CORE_PATH")
+readonly CORE_VERSION_PATH="$CORE_PATH/$CORE_VERSION"
+if [ "$USE_CORE_REPO" = "true" ]; then
+  # Remove the existing core and replace it with the main branch from the repository
+  # Important note: using latest version from the repository may introduce some new dependencies.
+  # It is advised to set the additional URL to the dev branch of the board manager file to ensure
+  # compatibility with the main branch of the core:
+  # additional-url: 'https://github.com/stm32duino/BoardManagerFiles/raw/dev/package_stmicroelectronics_index.json'
+  rm -rf "$CORE_VERSION_PATH"
+  # Clone the repository and copy the core files to the core path
+  git clone https://github.com/stm32duino/Arduino_Core_STM32.git "$CORE_VERSION_PATH" --recurse-submodules --depth 1 || {
+    exit 1
+  }
+fi
 # Install libraries if needed
 if [ -z "$LIBRARIES" ]; then
   echo "No libraries to install"
@@ -66,8 +80,7 @@ ln --symbolic "$GITHUB_WORKSPACE" "$LIBRARIES_PATH/." || {
   exit 1
 }
 
-CORE_VERSION=$(eval ls "$CORE_PATH")
-readonly CORE_VERSION_PATH="$CORE_PATH/$CORE_VERSION"
+
 SCRIPT_PATH="$CORE_VERSION_PATH/CI/build"
 EXAMPLES_PATH="examples"
 

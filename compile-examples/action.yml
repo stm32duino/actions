@@ -20,6 +20,9 @@ inputs:
   custom-config:
     description: 'JSON file containing the build configuration'
     default: ''
+  use-core-repo:
+    description: 'If set to `true`, the action will replace the STM32duino core with the latest version (main branch) from the repository after the board manager is installed'
+    default: 'false'
 outputs:
   compile-result: # id of output
     description: 'File name of the compile result'
@@ -33,4 +36,5 @@ runs:
     - ${{ inputs.additional-url }}
     - ${{ inputs.example-pattern }}
     - ${{ inputs.custom-config }}
+    - ${{ inputs.use-core-repo }}
 

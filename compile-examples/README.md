@@ -28,6 +28,10 @@ Pattern to build one or more example(s). Default `""` to build all examples foun
 
 JSON file containing the build configuration. Default `""` to use default configuration.
 
+### `use-core-repo`
+If set to `true`, the action will replace the STM32duino core with the latest version (main branch)
+from the repository after the board manager is installed. Default `false`.
+
 ## Outputs
 
 ### `compile-result`
@@ -42,8 +46,9 @@ with:
   board-pattern: 'NUCLEO_F103RB|NUCLEO_H743ZI'
   cli-version: '0.18.0'
   libraries: 'STM32duino LSM6DS0, STM32duino LSM6DS3, STM32duino LIS3MDL, STM32duino HTS221, STM32duino LPS25HB'
-  additional-url: 'https://github.com/stm32duino/BoardManagerFiles/raw/dev/STM32/package_stm_index.json'
+  additional-url: 'https://github.com/stm32duino/BoardManagerFiles/raw/dev/package_stmicroelectronics_index.json'
   example-pattern: '[Blink|Analog]'
+  use-core-repo: 'true'
 ```
 
 #### Output the result on failure

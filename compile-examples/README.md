@@ -28,46 +28,43 @@ Pattern to build one or more example(s). Default `""` to build all examples foun
 
 JSON file containing the build configuration. Default `""` to use default configuration.
 
-### `use-core-repo`
-If set to `true`, the action will replace the STM32duino core with the latest version (main branch)
-from the repository after the board manager is installed. Default `false`.
-
 ## Outputs
 
 ### `compile-result`
 
 File name of the Compile result.
 
-## Dynamic Core PR Selection via Comments
+## Dynamic Core Repository Selection via PR Description
 
 > [!Note]
 > Available with compile-examples@v2
 
-In addition to the `use-core-repo` input, you can dynamically select a specific Arduino_Core_STM32 PR
-to test against by adding a `/use-core-pr` keyword in a PR comment.
+You can dynamically enable core repository usage by adding a `/use-core-repo` keyword in the PR description.
+Optionally, you can specify a specific Arduino_Core_STM32 PR to test against by adding the PR number after the keyword.
 
 ### Usage
 
-Add a comment in the PR with the `/use-core-pr` keyword followed by a PR number:
+Add `/use-core-repo` in the PR description to use the latest main branch:
 
 ```
-/use-core-pr #123
+/use-core-repo
 ```
 
-or
+Or specify a specific PR to test against:
 
 ```
-/use-core-pr 123
+/use-core-repo #1234
 ```
+
 
 When the action runs, it will:
-1. Detect the `/use-core-pr` keyword in the PR comments
-2. Clone the Arduino_Core_STM32 repository
-3. Checkout the specified PR
+1. Scan the PR description for the `/use-core-repo` keyword
+2. If found with a PR number, clone the Arduino_Core_STM32 repository and checkout the specified PR
+3. If found without a PR number, clone and use the main branch
 4. Use that version instead of the released core package
 
 > [!Note]
-> The last occurrence of the `/use-core-pr` keyword in the PR body takes precedence if multiple are present.
+> The last occurrence of the `/use-core-repo` keyword in the PR description takes precedence if multiple are present.
 
 ## Example usage
 
@@ -79,8 +76,10 @@ with:
   libraries: 'STM32duino LSM6DS0, STM32duino LSM6DS3, STM32duino LIS3MDL, STM32duino HTS221, STM32duino LPS25HB'
   additional-url: 'https://github.com/stm32duino/BoardManagerFiles/raw/dev/package_stmicroelectronics_index.json'
   example-pattern: '[Blink|Analog]'
-  use-core-repo: 'true'
 ```
+
+> [!Tip]
+> To use the core repository, add `/use-core-repo` in your PR description. To test against a specific PR, add `/use-core-repo #1234`.
 
 #### Output the result on failure
 

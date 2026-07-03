@@ -6,7 +6,6 @@ readonly LIBRARIES="$3"
 readonly ADDITIONAL_URL="$4"
 readonly EXAMPLE_PATTERN="$5"
 readonly CUSTOM_CONFIG="$6"
-readonly USE_CORE_REPO="$7"
 
 readonly CORE_PATH="$HOME/.arduino15/packages/STMicroelectronics/hardware/stm32"
 readonly LIBRARIES_PATH="$HOME/Arduino/libraries"
@@ -49,9 +48,10 @@ arduino-cli core install STMicroelectronics:stm32 || {
 CORE_VERSION=$(eval ls "$CORE_PATH")
 readonly CORE_VERSION_PATH="$CORE_PATH/$CORE_VERSION"
 
-# Scan PR comments for the keyword: /use-core-pr <number>
-# The last occurrence wins (most recent comment takes precedence)
+# Scan PR description for the keyword: /use-core-repo with optional PR number
+# Example: /use-core-repo or /use-core-repo #1234
 CORE_PR_NUMBER=""
+USE_CORE_REPO="false"
 if [ -n "$GITHUB_TOKEN" ] && [ -n "$GITHUB_REPOSITORY" ] && [ -f "${GITHUB_EVENT_PATH:-}" ]; then
   PR_NUMBER=$(python3 -c "
 import json, sys
@@ -62,20 +62,34 @@ except Exception:
     pass
 " 2>/dev/null)
   if [ -n "$PR_NUMBER" ]; then
-    echo "Scanning PR #$PR_NUMBER body for /use-core-pr keyword..."
-    CORE_PR_NUMBER=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq '.body // ""' 2>/dev/null | python3 -c "
+    echo "Scanning PR #$PR_NUMBER description for /use-core-repo keyword..."
+    RESULT=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq '.body // ""' 2>/dev/null | python3 -c "
 import sys, re
-matches = re.findall(r'(?i)/use-core-pr\s+#?(\d+)', sys.stdin.read())
-if matches:
-    print(matches[-1])
+body = sys.stdin.read()
+# Check if /use-core-repo keyword exists
+if re.search(r'(?i)/use-core-repo', body):
+    # Try to extract optional PR number
+    matches = re.findall(r'(?i)/use-core-repo\s+#(\d+)', body)
+    if matches:
+        # Use the last occurrence
+        print('PR:' + matches[-1])
+    else:
+        # No PR number specified, use main branch
+        print('MAIN')
 " 2>/dev/null || true)
-    if [ -n "$CORE_PR_NUMBER" ]; then
-      echo "Found core PR reference: #$CORE_PR_NUMBER"
+    
+    if [[ "$RESULT" == PR:* ]]; then
+      CORE_PR_NUMBER="${RESULT#PR:}"
+      USE_CORE_REPO="true"
+      echo "Found /use-core-repo with PR reference: #$CORE_PR_NUMBER"
+    elif [ "$RESULT" = "MAIN" ]; then
+      USE_CORE_REPO="true"
+      echo "Found /use-core-repo keyword - will use main branch"
     fi
   fi
 fi
 
-if [ -n "$CORE_PR_NUMBER" ] || [ "$USE_CORE_REPO" = "true" ]; then
+if [ "$USE_CORE_REPO" = "true" ]; then
   # Remove the existing core and replace it with the repository version
   # Important note: using latest version from the repository may introduce some new dependencies.
   # It is advised to set the additional URL to the dev branch of the board manager file to ensure

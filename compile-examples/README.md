@@ -59,9 +59,11 @@ Or specify a specific PR to test against:
 
 When the action runs, it will:
 1. Scan the PR description for the `/use-core-repo` keyword
-2. If found with a PR number, clone the Arduino_Core_STM32 repository and checkout the specified PR
-3. If found without a PR number, clone and use the main branch
-4. Use that version instead of the released core package
+2. If `/use-core-repo` is found and `additional-url` is still the default URL (`.../raw/main/...`), switch to the dev index URL (`.../raw/dev/...`) for compatibility
+3. If `/use-core-repo` is found and `additional-url` is custom (not default), keep the custom URL unchanged
+4. If found with a PR number, clone the Arduino_Core_STM32 repository and checkout the specified PR
+5. If found without a PR number, clone and use the main branch
+6. Use that version instead of the released core package
 
 > [!Note]
 > The last occurrence of the `/use-core-repo` keyword in the PR description takes precedence if multiple are present.

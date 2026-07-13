@@ -11,6 +11,8 @@ readonly CORE_PATH="$HOME/.arduino15/packages/STMicroelectronics/hardware/stm32"
 readonly LIBRARIES_PATH="$HOME/Arduino/libraries"
 readonly EXAMPLES_FILE="examples.txt"
 readonly OUTPUT_FILE="compile-result.txt"
+readonly DEFAULT_ADDITIONAL_URL="https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json"
+readonly DEV_ADDITIONAL_URL="https://github.com/stm32duino/BoardManagerFiles/raw/dev/package_stmicroelectronics_index.json"
 echo "compile-result=$OUTPUT_FILE" >>"$GITHUB_OUTPUT"
 
 # Use python venv
@@ -39,19 +41,11 @@ tar --extract --file="$HOME/$CLI_ARCHIVE" --directory="$HOME/bin" || {
 # Add arduino-cli to the PATH
 export PATH=$PATH:$HOME/bin
 
-# Update the code index and install the required CORE
-arduino-cli config init --additional-urls "$ADDITIONAL_URL"
-arduino-cli core update-index
-arduino-cli core install STMicroelectronics:stm32 || {
-  exit 1
-}
-CORE_VERSION=$(eval ls "$CORE_PATH")
-readonly CORE_VERSION_PATH="$CORE_PATH/$CORE_VERSION"
-
 # Scan PR description for the keyword: /use-core-repo with optional PR number
 # Example: /use-core-repo or /use-core-repo #1234
 CORE_PR_NUMBER=""
 USE_CORE_REPO="false"
+EFFECTIVE_ADDITIONAL_URL="$ADDITIONAL_URL"
 if [ -n "$GITHUB_TOKEN" ] && [ -n "$GITHUB_REPOSITORY" ] && [ -f "${GITHUB_EVENT_PATH:-}" ]; then
   PR_NUMBER=$(python3 -c "
 import json, sys
@@ -88,6 +82,22 @@ if re.search(r'(?i)/use-core-repo', body):
     fi
   fi
 fi
+
+if [ "$USE_CORE_REPO" = "true" ] && [ "$ADDITIONAL_URL" = "$DEFAULT_ADDITIONAL_URL" ]; then
+  EFFECTIVE_ADDITIONAL_URL="$DEV_ADDITIONAL_URL"
+  echo "Switching additional URL to dev index for /use-core-repo: $EFFECTIVE_ADDITIONAL_URL"
+else
+  echo "Using additional URL: $EFFECTIVE_ADDITIONAL_URL"
+fi
+
+# Update the code index and install the required CORE
+arduino-cli config init --additional-urls "$EFFECTIVE_ADDITIONAL_URL"
+arduino-cli core update-index
+arduino-cli core install STMicroelectronics:stm32 || {
+  exit 1
+}
+CORE_VERSION=$(eval ls "$CORE_PATH")
+readonly CORE_VERSION_PATH="$CORE_PATH/$CORE_VERSION"
 
 if [ "$USE_CORE_REPO" = "true" ]; then
   # Remove the existing core and replace it with the repository version
@@ -174,7 +184,7 @@ fi
 
 # Check if arduino-cli.py manages url argument
 if grep "args.url" "$SCRIPT_PATH/arduino-cli.py" >/dev/null 2>&1; then
-  options+=(--url "$ADDITIONAL_URL")
+  options+=(--url "$EFFECTIVE_ADDITIONAL_URL")
 fi
 
 if [ -n "$BOARDS_PATTERN" ]; then

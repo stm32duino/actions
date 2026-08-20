@@ -1,6 +1,6 @@
 # STM32duino astyle-check action
 
-Runs Astyle on source code.
+Runs Astyle 3.1 on source code.
 
 ## Inputs
 

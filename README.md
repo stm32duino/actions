@@ -7,3 +7,5 @@ Usage informations can be found in their respective folders:
 * [astyle-check](astyle-check/README.md)
 
 * [compile-examples](compile-examples/README.md)
+
+* [library-docs-setup](library-docs-setup/README.md)

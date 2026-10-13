@@ -1,0 +1,15 @@
+# action.yml
+name: 'STM32duino library documentation setup'
+description: 'Installs the tools required to build a library documentation'
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-python@v7
+      with:
+        python-version: "3.x"
+    - name: Install Doxygen and Graphviz
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install --yes doxygen graphviz
+    - name: Install MkDocs and mike
+      shell: bash
+      run: python -m pip install mkdocs-material==9.7.7 mike==2.2.0

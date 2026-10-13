@@ -1,0 +1,50 @@
+name: Publish library versioned documentation
+
+on:
+  workflow_call:
+    inputs:
+      doxyfile:
+        description: Doxygen configuration file
+        type: string
+        default: Doxyfile
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: publish-docs-${{ github.repository }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: stm32duino/actions/library-docs-setup@main
+      - run: doxygen "${{ inputs.doxyfile }}"
+      - name: Configure Git author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Publish development documentation
+        if: github.ref == 'refs/heads/main'
+        run: |
+          mike deploy --push dev
+          # Until a release creates "latest", the site root must redirect to dev.
+          mike list latest > /dev/null 2>&1 || mike set-default --push dev
+      - name: Publish release documentation
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Unsupported documentation release tag: $VERSION" >&2
+            exit 1
+          fi
+          latest=$(git tag --list | sort -V | tail -n 1)
+          if [[ "$VERSION" == "$latest" ]]; then
+            mike deploy --update-aliases --push "$VERSION" latest
+            mike set-default --push latest
+          else
+            mike deploy --push "$VERSION"
+          fi

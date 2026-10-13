@@ -1,0 +1,20 @@
+name: Check library documentation
+
+on:
+  workflow_call:
+    inputs:
+      doxyfile:
+        description: Doxygen configuration file
+        type: string
+        default: Doxyfile
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: stm32duino/actions/library-docs-setup@main
+      - run: doxygen "${{ inputs.doxyfile }}"
+      - run: mkdocs build --strict

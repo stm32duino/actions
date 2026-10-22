@@ -42,9 +42,14 @@ jobs:
             exit 1
           fi
           latest=$(git tag --list | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
-          if [[ "$VERSION" == "$latest" ]]; then
-            mike deploy --update-aliases --push "$VERSION" latest
-            mike set-default --push latest
-          else
-            mike deploy --push "$VERSION"
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null; then
+            git fetch origin gh-pages:gh-pages
           fi
+          if [[ "$VERSION" == "$latest" ]]; then
+            mike deploy --update-aliases "$VERSION" latest
+            mike set-default latest
+          else
+            mike deploy "$VERSION"
+          fi
+          # One push so GitHub Pages builds the site once.
+          git push origin gh-pages
